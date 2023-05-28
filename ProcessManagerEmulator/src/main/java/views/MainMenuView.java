@@ -29,7 +29,7 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
     private final FCFS viewFSFC = new FCFS();
     private final FCFSController controllerD = new FCFSController(viewFSFC,modelF);
     
-    //RELATED WITH THE ROUNDROBIN
+    //RELATED WITH THE ROUNDROBINs
 
     public MainMenuModel getModel() {
         return model;
