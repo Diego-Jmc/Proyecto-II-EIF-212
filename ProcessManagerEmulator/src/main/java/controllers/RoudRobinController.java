@@ -18,4 +18,23 @@ public class RoudRobinController {
     private RoundRobinModel model;
     private RoundRobin view;
     
+     public RoudRobinController(RoundRobin view, RoundRobinModel model){
+        
+        this.view = view;
+        this.model = model;
+        view.setModel(model);
+        view.setController(this);
+    }
+    
+    
+    public void mostrar(){
+        
+        view.setVisible(true);
+    }
+    
+    public void hide(){
+        
+        view.setVisible(false);
+    }
+    
 }

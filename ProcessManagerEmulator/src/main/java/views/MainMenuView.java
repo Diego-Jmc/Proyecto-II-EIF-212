@@ -6,10 +6,16 @@ package views;
 
 import controllers.FCFSController;
 import controllers.MainMenuController;
+import controllers.RoudRobinController;
+import controllers.SJFEController;
+import controllers.SJFNEController;
 import java.util.Observable;
 import java.util.Observer;
 import models.FCFSModel;
 import models.MainMenuModel;
+import models.RoundRobinModel;
+import models.SJFEModel;
+import models.SJFNEModel;
 
 
 /**
@@ -28,6 +34,18 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
     private final FCFSModel modelF = new FCFSModel();
     private final FCFS viewFSFC = new FCFS();
     private final FCFSController controllerD = new FCFSController(viewFSFC,modelF);
+    
+    private final SJFEModel modelSJ = new SJFEModel();
+    private final SJFEView SJFEView = new SJFEView();
+    private final SJFEController controllerSJFE = new SJFEController(SJFEView, modelSJ);
+    
+    private final RoundRobinModel modelRR = new RoundRobinModel();
+    private final RoundRobin RRView = new RoundRobin();
+    private final RoudRobinController controllerRR = new RoudRobinController(RRView, modelRR);
+    
+    private final SJFNEModel modelSJNFE = new SJFNEModel();
+    private final SJFNEVIEW SJNFEView = new SJFNEVIEW();
+    private final SJFNEController controllerSJNFE = new SJFNEController(SJNFEView, modelSJNFE);
     
     //RELATED WITH THE ROUNDROBINsd
 
@@ -180,15 +198,19 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        System.out.println("¡Hola, mundo!");
+         controllerSJFE.mostrar();
+         controller.hide();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-         System.out.println("¡Hola, mundo!");
+        controllerSJNFE.mostrar();
+        controller.hide();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-         System.out.println("¡Hola, mundo!");
+         controllerRR.mostrar();          
+        controller.hide();
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
   

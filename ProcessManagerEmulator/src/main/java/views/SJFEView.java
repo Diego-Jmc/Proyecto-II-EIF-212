@@ -4,45 +4,43 @@
  */
 package views;
 
-import controllers.RoudRobinController;
+import controllers.SJFEController;
 import java.util.Observable;
 import java.util.Observer;
-import models.RoundRobinModel;
+import models.SJFEModel;
 
 /**
  *
  * @author Jordan Villalobos
  */
-public class RoundRobin extends javax.swing.JFrame implements Observer{
+public class SJFEView extends javax.swing.JFrame implements Observer {
+
+    /**
+     * Creates new form SJFEView
+     */
     
+    private SJFEModel model;
+    private SJFEController controller;
     
-      private RoundRobinModel model;
-     private RoudRobinController  controller;
-     
-       public RoundRobinModel getModel(){
+    public SJFEModel getModel(){
          
          return model;
      }
      
-       public RoudRobinController getController() {
+       public SJFEController getController() {
         return controller;
     }
 
-    public void setController(RoudRobinController controller) {
+    public void setController(SJFEController controller) {
         this.controller = controller;
     }
-     public void setModel(RoundRobinModel  model){
+     public void setModel(SJFEModel model){
          
          this.model = model;
          model.addObserver(this);
 
      }
-     
-
-    /**
-     * Creates new form RoundRobin
-     */
-    public RoundRobin() {
+    public SJFEView() {
         initComponents();
     }
 
@@ -60,25 +58,25 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         label1.setAlignment(java.awt.Label.CENTER);
-        label1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        label1.setName("title"); // NOI18N
-        label1.setText("Algoritmo de planificacion Round Robin");
+        label1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        label1.setFont(new java.awt.Font("Dialog", 2, 18)); // NOI18N
+        label1.setText("Algoritmo de planificacion SJF Expulsivo");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addGap(117, 117, 117)
+                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(125, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(362, Short.MAX_VALUE))
+                .addContainerGap(348, Short.MAX_VALUE))
         );
 
         pack();
@@ -101,20 +99,20 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RoundRobin().setVisible(true);
+                new SJFEView().setVisible(true);
             }
         });
     }
@@ -125,6 +123,6 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-      this.repaint();
+        this.repaint();
     }
 }
