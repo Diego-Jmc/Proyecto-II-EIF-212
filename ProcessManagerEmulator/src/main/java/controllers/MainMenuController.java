@@ -18,4 +18,16 @@ public class MainMenuController {
     
     
     
+      public void mostrar(){
+        
+        view.setVisible(true);
+    }
+    
+    public void hide(){
+        
+        view.setVisible(false);
+    }
+    
+    
+    
 }

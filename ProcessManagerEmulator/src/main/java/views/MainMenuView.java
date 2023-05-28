@@ -4,10 +4,13 @@
  */
 package views;
 
+import controllers.FCFSController;
 import controllers.MainMenuController;
 import java.util.Observable;
 import java.util.Observer;
+import models.FCFSModel;
 import models.MainMenuModel;
+
 
 /**
  *
@@ -17,8 +20,16 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
 
     
     
-    private MainMenuModel model;
-    private MainMenuController controller;
+    private MainMenuModel model = new MainMenuModel();
+    private MainMenuController controller = new MainMenuController(this, model);
+    
+    
+    //RELATED WITH THE FCFS
+    private final FCFSModel modelF = new FCFSModel();
+    private final FCFS viewFSFC = new FCFS();
+    private final FCFSController controllerD = new FCFSController(viewFSFC,modelF);
+    
+    //RELATED WITH THE ROUNDROBIN
 
     public MainMenuModel getModel() {
         return model;
@@ -68,6 +79,7 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
         jLabel2.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jLabel2.setText("FCFS");
 
+        jButton1.setBackground(new java.awt.Color(204, 204, 255));
         jButton1.setText("Comenzar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,11 +96,30 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
         jLabel5.setFont(new java.awt.Font("Segoe UI Light", 0, 18)); // NOI18N
         jLabel5.setText("Round Robin");
 
+        jButton2.setBackground(new java.awt.Color(204, 204, 255));
         jButton2.setText("Comenzar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
+        jButton3.setBackground(new java.awt.Color(204, 204, 255));
         jButton3.setText("Comenzar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
+        jButton4.setBackground(new java.awt.Color(204, 204, 255));
+        jButton4.setForeground(new java.awt.Color(51, 51, 51));
         jButton4.setText("Comenzar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,10 +170,28 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    //ading the events for the buttons.
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+       //ocultar
+       controllerD.mostrar();
+       controller.hide();
+       //mostrar FCFS
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        System.out.println("¡Hola, mundo!");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+         System.out.println("¡Hola, mundo!");
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+         System.out.println("¡Hola, mundo!");
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+  
     /**
      * @param args the command line arguments
      */
