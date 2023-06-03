@@ -35,6 +35,7 @@ public class RoudRobinController {
     public void hide(){
         
         view.setVisible(false);
+        
     }
     
 }
