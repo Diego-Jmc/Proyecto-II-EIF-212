@@ -5,12 +5,16 @@
 package views;
 
 import controllers.FCFSController;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import logic.ProcesoFIFO;
 import models.FCFSModel;
-
+import java.util.ArrayList;
 /**
  *
  * @author Jordan Villalobos
@@ -21,6 +25,8 @@ public class FCFS extends javax.swing.JFrame implements Observer{
      private FCFSModel model;
      private FCFSController controller;
      private int contador;
+     PaintFifo painter;
+     List<ProcesoFIFO> procesos = new ArrayList<>();
      
      public FCFSModel getModel(){
          
@@ -181,7 +187,43 @@ public class FCFS extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
        
+                int cant = procesos.size();
+                int total = 0;
+
+                for (int i = 0; i < procesos.size(); i++) {
+                    total += procesos.get(i).getDurationTime();
+                }
+
+                int[][] matrizEjemplo = new int[cant][total];
+                
+                for (int i = 0; i < procesos.size(); i++) {
+                    
+                    ProcesoFIFO p = procesos.get(i);
+                    
+                            
+                            matrizEjemplo[i][p.getArrivalTime()] = 1;
+              }
+    
+
+        int tamañoRectanguloAncho = 150; // Ancho del rectángulo en píxeles
+        int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
+        int espaciadoHorizontal = 25; // Espaciado horizontal entre rectángulos en píxeles
+        int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
+
+        SwingUtilities.invokeLater(() -> {
+            // Crear el marco principal y agiregar el componente personalizado
+            JFrame frame = new JFrame("Resolucion del algoritmo");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 400);
+
+            painter = new PaintFifo(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
+            espaciadoHorizontal, espaciadoVertical);
+            frame.add(painter);
+
+            frame.setVisible(true);
+        });
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
@@ -194,6 +236,7 @@ public class FCFS extends javax.swing.JFrame implements Observer{
    
         
         ProcesoFIFO p = new ProcesoFIFO(proceso,llegada,rafaga);
+        procesos.add(p);
     }//GEN-LAST:event_AgregarActionPerformed
 
     private void LlegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LlegadaActionPerformed
