@@ -15,38 +15,41 @@ import javax.swing.table.DefaultTableModel;
 import logic.ProcesoFIFO;
 import models.FCFSModel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 /**
  *
  * @author Jordan Villalobos
  */
-public class FCFS extends javax.swing.JFrame implements Observer{
+public class FCFS extends javax.swing.JFrame implements Observer {
 
-    
-     private FCFSModel model;
-     private FCFSController controller;
-     private int contador;
-     PaintFifo painter;
-     List<ProcesoFIFO> procesos = new ArrayList<>();
-     
-     public FCFSModel getModel(){
-         
-         return model;
-     }
-     
-       public FCFSController getController() {
+    private FCFSModel model;
+    private FCFSController controller;
+    private int contador;
+    PaintFifo painter;
+    List<ProcesoFIFO> procesos = new ArrayList<>();
+
+    public FCFSModel getModel() {
+
+        return model;
+    }
+
+    public FCFSController getController() {
         return controller;
     }
 
     public void setController(FCFSController controller) {
         this.controller = controller;
     }
-     public void setModel(FCFSModel model){
-         
-         this.model = model;
-         model.addObserver(this);
 
-     }
-     
+    public void setModel(FCFSModel model) {
+
+        this.model = model;
+        model.addObserver(this);
+
+    }
+
     /**
      * Creates new form FCFS
      */
@@ -188,24 +191,23 @@ public class FCFS extends javax.swing.JFrame implements Observer{
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-       
-                int cant = procesos.size();
-                int total = 0;
+        int cant = procesos.size();
+        int total = 0;
+        int maxArrivalTime = 0;
 
-                for (int i = 0; i < procesos.size(); i++) {
-                    total += procesos.get(i).getDurationTime();
-                }
+// Calcular la suma total de los tiempos de duración y encontrar el mayor tiempo de llegada
+        for (int i = 0; i < procesos.size(); i++) {
+            total += procesos.get(i).getDurationTime();
+            maxArrivalTime = Math.max(maxArrivalTime, procesos.get(i).getArrivalTime());
+        }
 
-                int[][] matrizEjemplo = new int[cant][total];
-                
-                for (int i = 0; i < procesos.size(); i++) {
-                    
-                    ProcesoFIFO p = procesos.get(i);
-                    
-                            
-                            matrizEjemplo[i][p.getArrivalTime()] = 1;
-              }
-    
+        int[][] matrizEjemplo = new int[cant][total + maxArrivalTime];
+        ordenarProcesos();
+
+        for (int i = 0; i < procesos.size(); i++) {
+            ProcesoFIFO p = procesos.get(i);
+            matrizEjemplo[i][p.getArrivalTime()] = 1;
+        }
 
         int tamañoRectanguloAncho = 150; // Ancho del rectángulo en píxeles
         int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
@@ -219,7 +221,7 @@ public class FCFS extends javax.swing.JFrame implements Observer{
             frame.setSize(600, 400);
 
             painter = new PaintFifo(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
-            espaciadoHorizontal, espaciadoVertical);
+                    espaciadoHorizontal, espaciadoVertical, procesos);
             frame.add(painter);
 
             frame.setVisible(true);
@@ -231,12 +233,28 @@ public class FCFS extends javax.swing.JFrame implements Observer{
         String proceso = "P" + contador;
         int rafaga = Integer.parseInt(RafagaFD.getText());
         int llegada = Integer.parseInt(Llegada.getText());
-        model.addRow(new Object[]{proceso, llegada,rafaga});
-        this.contador++;
-   
+       
         
-        ProcesoFIFO p = new ProcesoFIFO(proceso,llegada,rafaga);
-        procesos.add(p);
+
+        ProcesoFIFO p = new ProcesoFIFO(proceso, llegada, rafaga);
+        //verificar que no se haya ya puesto un proceso en esa llegada
+        int counter = 0;
+        
+        for (ProcesoFIFO pp : procesos) {
+             if (p.getArrivalTime() == pp.getArrivalTime()){
+                 counter = 1;
+             }
+             System.out.println(pp.getProcessName());
+        }
+        
+        if(counter == 0){
+            procesos.add(p);
+             model.addRow(new Object[]{proceso, llegada, rafaga});
+             this.contador++;
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_AgregarActionPerformed
 
     private void LlegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LlegadaActionPerformed
@@ -281,6 +299,11 @@ public class FCFS extends javax.swing.JFrame implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         this.repaint();
+    }
+
+    private void ordenarProcesos() {
+        Comparator<ProcesoFIFO> comparador = Comparator.comparingInt(ProcesoFIFO::getArrivalTime);
+        Collections.sort(procesos, comparador);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
