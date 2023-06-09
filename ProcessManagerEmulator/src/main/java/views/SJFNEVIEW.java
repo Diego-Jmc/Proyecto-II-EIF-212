@@ -5,40 +5,51 @@
 package views;
 
 import controllers.SJFNEController;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import logic.ProcesoFIFO;
+import logic.ProcesoN;
 import models.SJFNEModel;
 
 /**
  *
  * @author Jordan Villalobos
  */
-public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
-    
-    
-     private SJFNEModel model;
-     private  SJFNEController controller;
-     private int contador;
-     
-     public SJFNEModel getModel(){
-         
-         return model;
-     }
-     
-       public SJFNEController getController() {
+public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
+
+    private SJFNEModel model;
+    private SJFNEController controller;
+    private int contador;
+    PaintSJFNE painter;
+    List<ProcesoN> procesos = new ArrayList<>();
+
+    public SJFNEModel getModel() {
+
+        return model;
+    }
+
+    public SJFNEController getController() {
         return controller;
     }
 
     public void setController(SJFNEController controller) {
         this.controller = controller;
     }
-     public void setModel(SJFNEModel model){
-         
-         this.model = model;
-         model.addObserver(this);
 
-     }
+    public void setModel(SJFNEModel model) {
+
+        this.model = model;
+        model.addObserver(this);
+
+    }
 
     /**
      * Creates new form SJFNEVIEW
@@ -72,7 +83,7 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         label1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        label1.setText("Algoritmo de planificacion SJF NO EXPULSIVO");
+        label1.setText("Algoritmo de planificacion SJSF NO EXPULSIVO");
 
         jLabel1.setText("Agregar Proceso");
 
@@ -135,15 +146,6 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(130, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(92, 92, 92))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(Agregar)
-                        .addGap(255, 255, 255))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,9 +158,9 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel1)))
+                            .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel1))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -169,7 +171,16 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
                     .addGroup(layout.createSequentialGroup()
                         .addGap(254, 254, 254)
                         .addComponent(jLabel4)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(Agregar)
+                        .addGap(255, 255, 255))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(77, 77, 77))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,15 +211,31 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        String proceso = "P" + contador;
         int rafaga = Integer.parseInt(RafagaFD.getText());
-        int llegada =  Integer.parseInt(Llegada.getText());
-        model.addRow(new Object[]{this.contador, llegada,rafaga});
-        
-        
-        
-        this.contador++;
+        int llegada = Integer.parseInt(Llegada.getText());
+
+        ProcesoN p = new ProcesoN(proceso, llegada, rafaga);
+        //verificar que no se haya ya puesto un proceso en esa llegada
+        int counter = 0;
+
+        for (ProcesoN pp : procesos) {
+            if (p.getArrivalTime() == pp.getArrivalTime()) {
+                counter = 1;
+            }
+            System.out.println(pp.getProcessName());
+        }
+
+        if (counter == 0) {
+            procesos.add(p);
+            model.addRow(new Object[]{proceso, llegada, rafaga});
+
+            this.contador++;
+        } else {
+            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_AgregarActionPerformed
 
     private void RafagaFDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RafagaFDActionPerformed
@@ -216,7 +243,50 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
     }//GEN-LAST:event_RafagaFDActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        int cant = procesos.size();
+        int total = 0;
+        int maxArrivalTime = 0;
+
+// Calcular la suma total de los tiempos de duración y encontrar el mayor tiempo de llegada
+        for (int i = 0; i < procesos.size(); i++) {
+            total += procesos.get(i).getDurationTime();
+            maxArrivalTime = Math.max(maxArrivalTime, procesos.get(i).getArrivalTime());
+        }
+        
+        ordenarProcesosSJ2F();
+        int[][] matrizEjemplo = new int[cant][total + maxArrivalTime];
+        ordenarProcesosSJF();
+        for (int i = 0; i < procesos.size(); i++) {
+            ProcesoN p = procesos.get(i);
+            matrizEjemplo[i][p.getArrivalTime()] = 1;
+        }
+
+        int tamañoRectanguloAncho = 150; // Ancho del rectángulo en píxeles
+        int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
+        int espaciadoHorizontal = 25; // Espaciado horizontal entre rectángulos en píxeles
+        int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
+
+        SwingUtilities.invokeLater(() -> {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            // Crear el marco principal y agregar el componente personalizado
+            JFrame frame = new JFrame("Resolucion del algoritmo");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 400);
+
+            painter = new PaintSJFNE(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
+                    espaciadoHorizontal, espaciadoVertical, procesos);
+            frame.add(painter);
+
+            frame.setVisible(true);
+
+            for (int i = procesos.size() - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            // Operación procesos.clear() dentro de invokeLater
+            procesos.clear();
+            contador = 0;
+        });
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -252,6 +322,66 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer{
                 new SJFNEVIEW().setVisible(true);
             }
         });
+    }
+
+    private void ordenarProcesosSJF() {
+      
+        //El que llega de primero siempre se ejecuta primero.
+        List<ProcesoN> procesosAux = procesos;
+        procesosAux.sort(Comparator.comparingInt(ProcesoN::getArrivalTime));
+
+// Crear una lista auxiliar para los procesos ordenados
+        ProcesoN pp = procesosAux.get(0);
+        List<ProcesoN> procesosOrdenados = new ArrayList<>();
+        procesosOrdenados.add(pp);
+
+// Crear una lista auxiliar de procesos sin el proceso seleccionado inicialmente
+        List<ProcesoN> procesosRestantes = new ArrayList<>(procesos);
+        procesosRestantes.remove(pp);
+
+// Ordenar los procesos restantes por tiempo de duración ascendente
+        procesosRestantes.sort(Comparator.comparingInt(ProcesoN::getDurationTime));
+
+// Agregar los procesos restantes a la lista de procesos ordenados
+        procesosOrdenados.addAll(procesosRestantes);
+        
+        procesos = procesosOrdenados;
+
+    }
+    
+    private void ordenarProcesosSJ2F() {
+        
+        List<ProcesoN> procesosFinal  = new ArrayList();
+        
+        int tiempo = 0;
+        
+        while(!procesos.isEmpty()){
+            
+            List<ProcesoN> procesosLlegados = new ArrayList<>();
+            
+            for(ProcesoN proceso : procesos){
+                
+                if(proceso.getArrivalTime() <= tiempo){
+                    procesosLlegados.add(proceso);
+                }
+            }
+            
+            procesosLlegados.sort(Comparator.comparingInt(ProcesoN::getDurationTime));
+            
+            if(!procesosLlegados.isEmpty()){
+                ProcesoN pp = procesosLlegados.get(0);
+                int nuevoEjecuccion = pp.getDurationTime();
+                
+                procesosFinal.add(pp);
+                tiempo += nuevoEjecuccion;
+                
+                procesos.remove(pp);
+            }
+            else{
+                tiempo++;
+            }
+        }
+        procesos = procesosFinal;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -215,7 +215,8 @@ public class FCFS extends javax.swing.JFrame implements Observer {
         int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
 
         SwingUtilities.invokeLater(() -> {
-            // Crear el marco principal y agiregar el componente personalizado
+            DefaultTableModel model = (DefaultTableModel) TablaProcesos.getModel();
+            // Crear el marco principal y agregar el componente personalizado
             JFrame frame = new JFrame("Resolucion del algoritmo");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(600, 400);
@@ -225,7 +226,17 @@ public class FCFS extends javax.swing.JFrame implements Observer {
             frame.add(painter);
 
             frame.setVisible(true);
+            
+            for (int i = procesos.size() - 1; i >= 0; i--) {
+             model.removeRow(i);
+            }   
+            // Operación procesos.clear() dentro de invokeLater
+            procesos.clear();
+            contador = 0;
+            
         });
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
@@ -233,26 +244,24 @@ public class FCFS extends javax.swing.JFrame implements Observer {
         String proceso = "P" + contador;
         int rafaga = Integer.parseInt(RafagaFD.getText());
         int llegada = Integer.parseInt(Llegada.getText());
-       
-        
 
         ProcesoFIFO p = new ProcesoFIFO(proceso, llegada, rafaga);
         //verificar que no se haya ya puesto un proceso en esa llegada
         int counter = 0;
-        
+
         for (ProcesoFIFO pp : procesos) {
-             if (p.getArrivalTime() == pp.getArrivalTime()){
-                 counter = 1;
-             }
-             System.out.println(pp.getProcessName());
+            if (p.getArrivalTime() == pp.getArrivalTime()) {
+                counter = 1;
+            }
+            System.out.println(pp.getProcessName());
         }
-        
-        if(counter == 0){
+
+        if (counter == 0) {
             procesos.add(p);
-             model.addRow(new Object[]{proceso, llegada, rafaga});
-             this.contador++;
-        }
-        else{
+            model.addRow(new Object[]{proceso, llegada, rafaga});
+
+            this.contador++;
+        } else {
             JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_AgregarActionPerformed
@@ -304,6 +313,10 @@ public class FCFS extends javax.swing.JFrame implements Observer {
     private void ordenarProcesos() {
         Comparator<ProcesoFIFO> comparador = Comparator.comparingInt(ProcesoFIFO::getArrivalTime);
         Collections.sort(procesos, comparador);
+    }
+
+    private void reiniciarTable() {
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
