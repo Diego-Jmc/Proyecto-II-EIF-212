@@ -310,7 +310,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                         if (contaux == 0) {
                             int next = procesos.get(i + 1).getArrivalTime();
                             ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), next);
-                            ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime() - next);
+                            ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime() - next);
                             ppaux.add(auxiliar);
                             procesoAnterior = proceso;
                             cantAnterior = tiempoActual;
@@ -321,16 +321,60 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                             int arri = aux.getArrivalTime();
                             int ff = tiempoActual - arri;
                             if (proceso.getDurationTime() < ff) {
+                                
                                 ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime());
-                                particionesAux.add(nn);
-                                ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime());
+                               // particionesAux.add(nn);
+                                int ppauxDurationaux = proceso.getDurationTime() - (ff-proceso.getDurationTime());
+                                ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), ppauxDurationaux);
+                                
+                                if(ppauxDurationaux < 0 ){
+                                    ppaux.add(auxiliar);
+                                }
+                                
+                                int xxcontador = 0;
+                                for(int x=0; x<ppaux.size(); x++){
+                                    if(ppaux.get(x).getDurationTime() < proceso.getDurationTime()){
+                                        xxcontador ++;
+                                    }
+                                }
+                                
+                                if(xxcontador != 0){
+                                    nn.setDurationTime(proceso.getDurationTime());
+                                    ppaux.add(nn);
+                                }
+                                else{
+                                      particionesAux.add(nn);
+                                       //ProcesoN auxiliarr = new ProcesoN(proceso.getProcessName()+ "'", proceso.getArrivalTime(), ppauxDurationaux);
                                 ppaux.add(auxiliar);
+                                }
+                                
+                                
                             } else {
                                 int sss = tiempoActual - arri;
+                                
+                                int xxcontador = 0;
+                                for(int x=0; x<ppaux.size(); x++){
+                                    if(ppaux.get(x).getDurationTime() < proceso.getDurationTime()){
+                                        xxcontador ++;
+                                    }
+                                }
                                 ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), sss);
-                                particionesAux.add(nn);
-                                ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime() - sss);
-                                ppaux.add(auxiliar);
+                                //particionesAux.add(nn);
+                                if(xxcontador != 0){
+                                    nn.setDurationTime(proceso.getDurationTime());
+                                    ppaux.add(nn);
+                                }
+                                else{
+                                      particionesAux.add(nn);
+                                      ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime() - sss);
+                                      
+                                      int prueba = proceso.getDurationTime() - (proceso.getDurationTime()-sss);
+                                      if(prueba != 0){
+                                           ppaux.add(auxiliar);
+                                      }
+                                     
+                                }
+                                
                             }
                         }
                         procesos.remove(i);
@@ -352,9 +396,12 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                     ProcesoN proceso = ppaux.get(i);
                     proceso.setArrivalTime(tiempoActual);
                     tiempoActual += proceso.getDurationTime();
-                    particionesAux.add(proceso);
-                    ppaux.remove(i);
-                    i--; // Ajustar el índice después de eliminar el elemento
+                    if(proceso.getDurationTime() > 0){
+                         particionesAux.add(proceso);
+                   
+                    }
+                     ppaux.remove(i);
+                      i--;
                 }
 
             }

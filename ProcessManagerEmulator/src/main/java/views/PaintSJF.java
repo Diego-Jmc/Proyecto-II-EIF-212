@@ -149,18 +149,14 @@ public class PaintSJF extends JPanel  {
                                     String pname = pp.getProcessName();
                                     int pTiempoEspero = (pp.getCt() - pp.getArrivalTime()) - pp.getDurationTime();
                                     counter2 += pTiempoEspero;
-                                    g.drawString(pname + " TIEMPO DE ESPERA: " + pTiempoEspero, 400, startY + 200 + ii);
+                                    //g.drawString(pname + " TIEMPO DE ESPERA: " + pTiempoEspero, 400, startY + 200 + ii);
                                     ii += 30;
                                     counter3++;
                                 }
 
                                 double media = counter2 / (double) contador;
 
-                                g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
-                                g.setColor(Color.BLACK);
-                                g.setColor(Color.BLACK);
-                                g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
-                                g.setColor(Color.BLACK);
+                                
                                 g.drawString("El algoritmo SJF EXPULSIVO ha terminado, diagrama completo", 400, startY + 250 + ii);
                                 JButton button = new JButton("Salir");
                                 button.setBounds(600, startY + 260 + ii, 100, 30);
