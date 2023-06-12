@@ -25,9 +25,9 @@ import logic.ProcesoN;
  *
  * @author Jordan Villalobos
  */
-public class PaintSJFNE extends JPanel {
-
-    private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
+public class PaintSJF extends JPanel  {
+    
+   private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
     private int tamañoRectanguloAncho; // Ancho del rectángulo en píxeles
     private int tamañoRectanguloAlto; // Alto del rectángulo en píxeles
     private int espaciadoHorizontal; // Espaciado horizontal entre rectángulos en píxeles
@@ -36,7 +36,7 @@ public class PaintSJFNE extends JPanel {
     private Timer timer; // Temporizador para la animación
     private List<ProcesoN> procesos;
 
-    public PaintSJFNE(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
+    public PaintSJF(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
             int espaciadoHorizontal, int espaciadoVertical, List<ProcesoN> pp) {
 
         this.matriz = matriz;
@@ -83,7 +83,7 @@ public class PaintSJFNE extends JPanel {
         int currentCol = currentIndex % cols;
 
         g.drawString(
-                "Diagrama de GANTT ALGORITMO SJF NO EXPULSIVO", 350, 55);
+                "Diagrama de GANTT ALGORITMO SJF EXPULSIVO", 350, 55);
         Graphics2D g2d = (Graphics2D) g;
         float grosorLinea = 5.0f; // Puedes ajustar el valor según el grosor deseado
 
@@ -161,7 +161,7 @@ public class PaintSJFNE extends JPanel {
                                 g.setColor(Color.BLACK);
                                 g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
                                 g.setColor(Color.BLACK);
-                                g.drawString("El algoritmo SJF NO EXPULSIVO ha terminado, diagrama completo", 400, startY + 250 + ii);
+                                g.drawString("El algoritmo SJF EXPULSIVO ha terminado, diagrama completo", 400, startY + 250 + ii);
                                 JButton button = new JButton("Salir");
                                 button.setBounds(600, startY + 260 + ii, 100, 30);
                                 button.addActionListener(new ActionListener() {

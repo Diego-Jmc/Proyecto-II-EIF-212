@@ -6,16 +6,23 @@ package views;
 
 import controllers.RoudRobinController;
 import java.awt.Label;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import models.RoundRobinModel;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import logic.ProcesoN;
 
 
 /**
@@ -30,8 +37,10 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
      private RoundRobinModel model;
      private RoudRobinController  controller;
      private int contador;
-  
-     
+     List<ProcesoN> procesos = new ArrayList<>();
+     PaintRR painter;
+
+     int quantum = 2;
      
        public RoundRobinModel getModel(){
          
@@ -80,6 +89,8 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        llegada = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,10 +127,18 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
 
             },
             new String [] {
-                "#Proceso", "Rafaga"
+                "#Proceso", "Rafaga", "Tiempo Llegada"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
+
+        jLabel5.setText("Llegada");
+
+        llegada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                llegadaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -137,17 +156,19 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
+                            .addGap(11, 11, 11)
+                            .addComponent(jLabel5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(llegada, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(34, 34, 34)
                             .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
+                            .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(agregarbt)
-                            .addContainerGap(890, Short.MAX_VALUE)))))
+                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(221, 221, 221)
-                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(368, 368, 368)
                         .addComponent(jLabel3))
@@ -155,21 +176,24 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
                         .addGap(145, 145, 145)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton2)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(463, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(38, 38, 38)
                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(1, 1, 1)
                 .addComponent(jLabel1)
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(agregarbt))
+                    .addComponent(agregarbt)
+                    .addComponent(jLabel5)
+                    .addComponent(llegada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addComponent(jLabel3)
                 .addGap(12, 12, 12)
@@ -186,17 +210,83 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void agregarbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarbtActionPerformed
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        String proceso = "P" + contador;
         int rafaga = Integer.parseInt(RafagaFD.getText());
-        
-        model.addRow(new Object[]{this.contador, rafaga});
-        
-        this.contador++;
+        int llegadaa = Integer.parseInt(llegada.getText());
+
+        ProcesoN p = new ProcesoN(proceso, llegadaa, rafaga);
+        //verificar que no se haya ya puesto un proceso en esa llegada
+        int counter = 0;
+
+        for (ProcesoN pp : procesos) {
+            if (p.getArrivalTime() == pp.getArrivalTime()) {
+                counter = 1;
+            }
+            System.out.println(pp.getProcessName());
+        }
+
+        if (counter == 0) {
+            procesos.add(p);
+            model.addRow(new Object[]{proceso, llegadaa, rafaga});
+
+            this.contador++;
+        } else {
+            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_agregarbtActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+       int cant = procesos.size();
+        int total = 0;
+        int maxArrivalTime = 0;
+
+// Calcular la suma total de los tiempos de duración y encontrar el mayor tiempo de llegada
+        for (int i = 0; i < procesos.size(); i++) {
+            total += procesos.get(i).getDurationTime();
+            maxArrivalTime = Math.max(maxArrivalTime, procesos.get(i).getArrivalTime());
+        }
+        
+        ordenarProcesosRR();
+        int[][] matrizEjemplo = new int[cant][total + maxArrivalTime];
+     
+        for (int i = 0; i < procesos.size(); i++) {
+            ProcesoN p = procesos.get(i);
+            matrizEjemplo[i][p.getArrivalTime()] = 1;
+        }
+
+        int tamañoRectanguloAncho = 150; // Ancho del rectángulo en píxeles
+        int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
+        int espaciadoHorizontal = 25; // Espaciado horizontal entre rectángulos en píxeles
+        int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
+
+        SwingUtilities.invokeLater(() -> {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            // Crear el marco principal y agregar el componente personalizado
+            JFrame frame = new JFrame("Resolucion del algoritmo");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 400);
+
+            painter = new PaintRR(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
+                    espaciadoHorizontal, espaciadoVertical, procesos);
+            frame.add(painter);
+
+            frame.setVisible(true);
+
+            for (int i = procesos.size() - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            // Operación procesos.clear() dentro de invokeLater
+            procesos.clear();
+            contador = 0;
+        });
+
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void llegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_llegadaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_llegadaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -241,13 +331,46 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     private java.awt.Label label1;
+    private javax.swing.JTextField llegada;
     // End of variables declaration//GEN-END:variables
 
-    
+     private void ordenarProcesosRR() {
+    List<ProcesoN> procesosFinal = new ArrayList<>();
+    int tiempo = 0;
+
+    while (!procesos.isEmpty()) {
+        List<ProcesoN> procesosLlegados = new ArrayList<>();
+
+        for (ProcesoN proceso : procesos) {
+            if (proceso.getArrivalTime() <= tiempo) {
+                procesosLlegados.add(proceso);
+            }
+        }
+
+        if (!procesosLlegados.isEmpty()) {
+            ProcesoN pp = procesosLlegados.get(0);
+            int nuevoEjecucion = Math.min(pp.getDurationTime(), quantum);
+            ProcesoN aux = new ProcesoN(pp.getProcessName(), pp.getArrivalTime(), nuevoEjecucion);
+
+            pp.setDurationTime(pp.getDurationTime() - nuevoEjecucion);
+
+            procesosFinal.add(aux);
+            tiempo += nuevoEjecucion;
+
+            if (pp.getDurationTime() <= 0) {
+                procesos.remove(pp);
+            }
+        } else {
+            tiempo++;
+        }
+    }
+    procesos = procesosFinal;
+}
     
     @Override
     public void update(Observable o, Object arg) {

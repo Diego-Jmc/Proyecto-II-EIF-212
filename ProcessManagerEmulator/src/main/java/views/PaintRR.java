@@ -4,7 +4,6 @@
  */
 package views;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -18,16 +17,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import logic.ProcesoFIFO;
 import logic.ProcesoN;
 
 /**
  *
  * @author Jordan Villalobos
  */
-public class PaintSJFNE extends JPanel {
-
-    private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
+public class PaintRR extends JPanel{
+   private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
     private int tamañoRectanguloAncho; // Ancho del rectángulo en píxeles
     private int tamañoRectanguloAlto; // Alto del rectángulo en píxeles
     private int espaciadoHorizontal; // Espaciado horizontal entre rectángulos en píxeles
@@ -36,7 +33,7 @@ public class PaintSJFNE extends JPanel {
     private Timer timer; // Temporizador para la animación
     private List<ProcesoN> procesos;
 
-    public PaintSJFNE(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
+    public PaintRR(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
             int espaciadoHorizontal, int espaciadoVertical, List<ProcesoN> pp) {
 
         this.matriz = matriz;
@@ -161,7 +158,7 @@ public class PaintSJFNE extends JPanel {
                                 g.setColor(Color.BLACK);
                                 g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
                                 g.setColor(Color.BLACK);
-                                g.drawString("El algoritmo SJF NO EXPULSIVO ha terminado, diagrama completo", 400, startY + 250 + ii);
+                                g.drawString("El algoritmo Round Robin ha terminado, diagrama completo", 400, startY + 250 + ii);
                                 JButton button = new JButton("Salir");
                                 button.setBounds(600, startY + 260 + ii, 100, 30);
                                 button.addActionListener(new ActionListener() {

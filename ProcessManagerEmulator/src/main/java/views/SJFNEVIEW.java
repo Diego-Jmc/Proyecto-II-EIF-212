@@ -324,8 +324,8 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
         });
     }
 
-    private void ordenarProcesosSJF() {
-      
+     private void ordenarProcesosSJF() {
+
         //El que llega de primero siempre se ejecuta primero.
         List<ProcesoN> procesosAux = procesos;
         procesosAux.sort(Comparator.comparingInt(ProcesoN::getArrivalTime));
@@ -344,37 +344,37 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
 
 // Agregar los procesos restantes a la lista de procesos ordenados
         procesosOrdenados.addAll(procesosRestantes);
-        
+
         procesos = procesosOrdenados;
 
     }
-    
+
     private void ordenarProcesosSJ2F() {
-        
+
         List<ProcesoN> procesosFinal  = new ArrayList();
-        
+
         int tiempo = 0;
-        
+
         while(!procesos.isEmpty()){
-            
+
             List<ProcesoN> procesosLlegados = new ArrayList<>();
-            
+
             for(ProcesoN proceso : procesos){
-                
+
                 if(proceso.getArrivalTime() <= tiempo){
                     procesosLlegados.add(proceso);
                 }
             }
-            
+
             procesosLlegados.sort(Comparator.comparingInt(ProcesoN::getDurationTime));
-            
+
             if(!procesosLlegados.isEmpty()){
                 ProcesoN pp = procesosLlegados.get(0);
                 int nuevoEjecuccion = pp.getDurationTime();
-                
+
                 procesosFinal.add(pp);
                 tiempo += nuevoEjecuccion;
-                
+
                 procesos.remove(pp);
             }
             else{

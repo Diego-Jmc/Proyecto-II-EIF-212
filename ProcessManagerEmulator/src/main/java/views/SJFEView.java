@@ -5,9 +5,18 @@
 package views;
 
 import controllers.SJFEController;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.PriorityQueue;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import logic.ProcesoN;
 import models.SJFEModel;
 
 /**
@@ -19,28 +28,32 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
     /**
      * Creates new form SJFEView
      */
-    
     private SJFEModel model;
     private SJFEController controller;
     private int contador;
-    public SJFEModel getModel(){
-         
-         return model;
-     }
-     
-       public SJFEController getController() {
+    PaintSJF painter;
+    List<ProcesoN> procesos = new ArrayList<>();
+
+    public SJFEModel getModel() {
+
+        return model;
+    }
+
+    public SJFEController getController() {
         return controller;
     }
 
     public void setController(SJFEController controller) {
         this.controller = controller;
     }
-     public void setModel(SJFEModel model){
-         
-         this.model = model;
-         model.addObserver(this);
 
-     }
+    public void setModel(SJFEModel model) {
+
+        this.model = model;
+        model.addObserver(this);
+
+    }
+
     public SJFEView() {
         initComponents();
     }
@@ -192,18 +205,82 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
+
         DefaultTableModel model = (DefaultTableModel) tablaProcesos.getModel();
+        String proceso = "P" + contador;
         int rafaga = Integer.parseInt(RafagaFD.getText());
         int llegada = Integer.parseInt(Llegada.getText());
-        
-        model.addRow(new Object[]{this.contador, llegada, rafaga});
-        
-        this.contador++;
+
+        ProcesoN p = new ProcesoN(proceso, llegada, rafaga);
+        //verificar que no se haya ya puesto un proceso en esa llegada
+        int counter = 0;
+
+        for (ProcesoN pp : procesos) {
+            if (p.getArrivalTime() == pp.getArrivalTime()) {
+                counter = 1;
+            }
+            System.out.println(pp.getProcessName());
+        }
+
+        if (counter == 0) {
+            procesos.add(p);
+            model.addRow(new Object[]{proceso, llegada, rafaga});
+
+            this.contador++;
+        } else {
+            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+
+        List<ProcesoN> particiones = aplicarSJFExpulsivo(procesos);
+
+        int cant = particiones.size();
+        int total = 0;
+        int maxArrivalTime = 0;
+
+// Calcular la suma total de los tiempos de duración y encontrar el mayor tiempo de llegada
+        for (int i = 0; i < particiones.size(); i++) {
+            total += particiones.get(i).getDurationTime();
+            maxArrivalTime = Math.max(maxArrivalTime, particiones.get(i).getArrivalTime());
+        }
+
+        int[][] matrizEjemplo = new int[cant][total + maxArrivalTime];
+        //List<ProcesoN> particiones = aplicarSJFExpulsivo(procesos);
+
+        for (int i = 0; i < particiones.size(); i++) {
+            ProcesoN p = particiones.get(i);
+            matrizEjemplo[i][p.getArrivalTime()] = 1;
+        }
+
+        int tamañoRectanguloAncho = 150; // Ancho del rectángulo en píxeles
+        int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
+        int espaciadoHorizontal = 25; // Espaciado horizontal entre rectángulos en píxeles
+        int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
+
+        SwingUtilities.invokeLater(() -> {
+            DefaultTableModel model = (DefaultTableModel) tablaProcesos.getModel();
+            // Crear el marco principal y agregar el componente personalizado
+            JFrame frame = new JFrame("Resolucion del algoritmo");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 400);
+
+            painter = new PaintSJF(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
+                    espaciadoHorizontal, espaciadoVertical, particiones);
+            frame.add(painter);
+
+            frame.setVisible(true);
+
+            for (int i = procesos.size() - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            // Operación procesos.clear() dentro de invokeLater
+            procesos.clear();
+            contador = 0;
+        });
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void RafagaFDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RafagaFDActionPerformed
@@ -213,6 +290,83 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
     private void LlegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LlegadaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_LlegadaActionPerformed
+    public static List<ProcesoN> aplicarSJFExpulsivo(List<ProcesoN> procesos) {
+        List<ProcesoN> particiones = new ArrayList<>();
+        int tiempoActual = 0;
+        List<ProcesoN> ppaux = new ArrayList<>();   //guardar aqui el pedazo de proceso restante.
+        int cantAnterior = 0;
+        int contaux = 0;
+        List<ProcesoN> particionesAux = new ArrayList<>();
+
+        ProcesoN procesoAnterior = new ProcesoN();
+
+        if (procesos.size() == 1) {
+            particionesAux.add(procesos.get(0));
+        } else {
+            while (!procesos.isEmpty()) {
+                for (int i = 0; i < procesos.size(); i++) {
+                    ProcesoN proceso = procesos.get(i);
+                    if (proceso.getArrivalTime() == tiempoActual) {
+                        if (contaux == 0) {
+                            int next = procesos.get(i + 1).getArrivalTime();
+                            ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), next);
+                            ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime() - next);
+                            ppaux.add(auxiliar);
+                            procesoAnterior = proceso;
+                            cantAnterior = tiempoActual;
+                            contaux++;
+                            particionesAux.add(nn);
+                        } else {
+                            ProcesoN aux = particionesAux.get(particionesAux.size() - 1);
+                            int arri = aux.getArrivalTime();
+                            int ff = tiempoActual - arri;
+                            if (proceso.getDurationTime() < ff) {
+                                ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime());
+                                particionesAux.add(nn);
+                                ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime());
+                                ppaux.add(auxiliar);
+                            } else {
+                                int sss = tiempoActual - arri;
+                                ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), sss);
+                                particionesAux.add(nn);
+                                ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), 0, proceso.getDurationTime() - sss);
+                                ppaux.add(auxiliar);
+                            }
+                        }
+                        procesos.remove(i);
+                    }
+                }
+                tiempoActual++;
+            }
+            for (ProcesoN proceso : ppaux) {
+                System.out.println("Duración: " + proceso.getDurationTime());
+
+            }
+            
+            Collections.sort(ppaux, Comparator.comparingInt(ProcesoN::getDurationTime));
+            
+            
+            while (!ppaux.isEmpty()) {
+
+                for (int i = 0; i < ppaux.size(); i++) {
+                    ProcesoN proceso = ppaux.get(i);
+                    proceso.setArrivalTime(tiempoActual);
+                    tiempoActual += proceso.getDurationTime();
+                    particionesAux.add(proceso);
+                    ppaux.remove(i);
+                    i--; // Ajustar el índice después de eliminar el elemento
+                }
+
+            }
+            
+        }
+        
+        Collections.sort(particionesAux, Comparator.comparingInt(ProcesoN::getArrivalTime)
+        .thenComparingInt(ProcesoN::getDurationTime));
+
+        //despues pinta sin asco.
+        return particionesAux;
+    }
 
     /**
      * @param args the command line arguments
