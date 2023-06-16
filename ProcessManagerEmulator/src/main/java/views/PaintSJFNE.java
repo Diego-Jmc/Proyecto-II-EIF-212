@@ -154,7 +154,7 @@ public class PaintSJFNE extends JPanel {
                                     counter3++;
                                 }
 
-                                double media = counter2 / (double) contador;
+                                double media = counter2 / (double) contador +1;
 
                                 g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
                                 g.setColor(Color.BLACK);

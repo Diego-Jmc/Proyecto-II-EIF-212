@@ -35,9 +35,10 @@ public class PaintSJF extends JPanel  {
     private int currentIndex; // Índice del rectángulo actual
     private Timer timer; // Temporizador para la animación
     private List<ProcesoN> procesos;
+    private List<ProcesoN> original;
 
     public PaintSJF(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
-            int espaciadoHorizontal, int espaciadoVertical, List<ProcesoN> pp) {
+            int espaciadoHorizontal, int espaciadoVertical, List<ProcesoN> pp,List<ProcesoN> original) {
 
         this.matriz = matriz;
         this.tamañoRectanguloAncho = tamañoRectanguloAncho;
@@ -46,6 +47,7 @@ public class PaintSJF extends JPanel  {
         this.espaciadoVertical = espaciadoVertical;
         this.currentIndex = 0;
         this.procesos = new ArrayList<>(pp);
+        this.original = original;
 
         timer = new Timer(300, new ActionListener() {
             @Override
@@ -145,18 +147,24 @@ public class PaintSJF extends JPanel  {
                                 int ii = 0;
                                 int counter2 = 0;
                                 int counter3 = 1;
-                                for (ProcesoN pp : procesos) {
+                                for (ProcesoN pp : original) {
                                     String pname = pp.getProcessName();
-                                    int pTiempoEspero = (pp.getCt() - pp.getArrivalTime()) - pp.getDurationTime();
-                                    counter2 += pTiempoEspero;
-                                    //g.drawString(pname + " TIEMPO DE ESPERA: " + pTiempoEspero, 400, startY + 200 + ii);
+                                    int pTiempoEspero = ((pp.getArrivalTime()-1) + pp.getDurationTime());
+                                    int TAT = pp.getCompletation()- pp.getArrivalTime();  //getArrivalLo tira bien
+                                    int WAT = TAT - pp.getDurationTime();
+                                    counter2 += WAT;
+                                    g.drawString(pname + " TIEMPO DE ESPERA: " + WAT, 400, startY + 200 + ii);
                                     ii += 30;
                                     counter3++;
                                 }
 
-                                double media = counter2 / (double) contador;
+                                double media = counter2 / (double) original.size();
 
-                                
+                                g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
+                                g.setColor(Color.BLACK);
+                                g.setColor(Color.BLACK);
+                                g.drawString("TIEMPO DE ESPERA MEDIO: " + media, 400, startY + 200 + ii);
+                                g.setColor(Color.BLACK);
                                 g.drawString("El algoritmo SJF EXPULSIVO ha terminado, diagrama completo", 400, startY + 250 + ii);
                                 JButton button = new JButton("Salir");
                                 button.setBounds(600, startY + 260 + ii, 100, 30);

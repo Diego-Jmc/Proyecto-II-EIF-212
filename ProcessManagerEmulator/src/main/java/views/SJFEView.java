@@ -234,7 +234,12 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
+        
+        List<ProcesoN> originales = new ArrayList<>(procesos);
+        
         List<ProcesoN> particiones = aplicarSJFExpulsivo(procesos);
+        
+        
 
         int cant = particiones.size();
         int total = 0;
@@ -258,7 +263,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
         int tamañoRectanguloAlto = 90; // Alto del rectángulo en píxeles
         int espaciadoHorizontal = 25; // Espaciado horizontal entre rectángulos en píxeles
         int espaciadoVertical = 25; // Espaciado vertical entre rectángulos en píxeles
-
+        List<ProcesoN> originales2 = getMedia(originales, particiones);
         SwingUtilities.invokeLater(() -> {
             DefaultTableModel model = (DefaultTableModel) tablaProcesos.getModel();
             // Crear el marco principal y agregar el componente personalizado
@@ -267,7 +272,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
             frame.setSize(600, 400);
 
             painter = new PaintSJF(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
-                    espaciadoHorizontal, espaciadoVertical, particiones);
+                    espaciadoHorizontal, espaciadoVertical, particiones, originales2);
             frame.add(painter);
 
             frame.setVisible(true);
@@ -382,11 +387,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                 }
                 tiempoActual++;
             }
-            for (ProcesoN proceso : ppaux) {
-                System.out.println("Duración: " + proceso.getDurationTime());
-
-            }
-            
+           
             Collections.sort(ppaux, Comparator.comparingInt(ProcesoN::getDurationTime));
             
             
@@ -396,6 +397,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                     ProcesoN proceso = ppaux.get(i);
                     proceso.setArrivalTime(tiempoActual);
                     tiempoActual += proceso.getDurationTime();
+                    
                     if(proceso.getDurationTime() > 0){
                          particionesAux.add(proceso);
                    
@@ -449,6 +451,35 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
             }
         });
     }
+    
+    
+public static List<ProcesoN> getMedia(List<ProcesoN> original, List<ProcesoN> particiones) {
+    List<ProcesoN> auxOriginal = new ArrayList<>(original); // Copia independiente de la lista original
+    List<ProcesoN> auxParticiones = new ArrayList<>(particiones); // Copia independiente de la lista particiones
+    
+    List<ProcesoN> aux = new ArrayList<>();
+    
+    for (ProcesoN proceso : auxOriginal) {
+        ProcesoN ppaux = proceso;
+        ppaux.setCompletation(ppaux.getArrivalTime() + ppaux.getDurationTime());
+        for (ProcesoN procesoAux : auxParticiones) {
+            
+            if (proceso.getProcessName().equals(procesoAux.getProcessName())) {
+                 
+                if (proceso.getArrivalTime() < procesoAux.getArrivalTime()) {
+                    
+                    ppaux.setCompletation((procesoAux.getArrivalTime()-1) + procesoAux.getDurationTime());
+               }
+            }
+            
+            
+        }
+        aux.add(ppaux);
+    }
+    
+    return aux;
+}
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Llegada;

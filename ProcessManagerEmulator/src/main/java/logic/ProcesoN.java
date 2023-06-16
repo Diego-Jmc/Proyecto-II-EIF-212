@@ -15,6 +15,7 @@ public class ProcesoN {
      private int durationTime;
      private int tiempoEspera;
      private int ct;
+     private int completation;
 
     public ProcesoN(String processName, int arrivalTime, int durationTime) {
         this.processName = processName;
@@ -22,6 +23,7 @@ public class ProcesoN {
         this.durationTime = durationTime;
         this.tiempoEspera = 0;
         this.ct =0 ;
+        this.completation = 0;
     }
 
     public ProcesoN() {
@@ -61,6 +63,15 @@ public class ProcesoN {
         this.durationTime = durationTime;
     }
 
+    public int getCompletation() {
+        return completation;
+    }
+
+    public void setCompletation(int completation) {
+        this.completation = completation;
+    }
+
+    
     public int getCt() {
         return ct;
     }
