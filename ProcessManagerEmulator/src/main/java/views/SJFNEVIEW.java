@@ -76,9 +76,10 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         Llegada = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        salirBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -137,41 +138,24 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Resolucion del algoritmo");
-
         jLabel5.setText("Llegada");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel6.setText("¿DESEA SALIR AL MENU PRINCIPAL?");
+
+        salirBtn.setBackground(new java.awt.Color(255, 51, 51));
+        salirBtn.setForeground(new java.awt.Color(255, 255, 255));
+        salirBtn.setText("Salir");
+        salirBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(Llegada, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel1))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(254, 254, 254)
-                        .addComponent(jLabel4)))
-                .addContainerGap(132, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,6 +165,37 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(77, 77, 77))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(103, 103, 103)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(187, 187, 187)
+                        .addComponent(jLabel6)))
+                .addContainerGap(132, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(Llegada, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(RafagaFD, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(270, 270, 270)
+                        .addComponent(salirBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,9 +217,11 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addContainerGap(224, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(salirBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(148, Short.MAX_VALUE))
         );
 
         pack();
@@ -214,8 +231,30 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
 
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         String proceso = "P" + contador;
-        int rafaga = Integer.parseInt(RafagaFD.getText());
-        int llegada = Integer.parseInt(Llegada.getText());
+        int cc = 0;
+        int cc2 = 0;
+        int llegada =0;
+        int rafaga = 0;
+        String rafagaa = RafagaFD.getText();
+        if (rafagaa.matches("[a-zA-Z]+")) {
+           JOptionPane.showMessageDialog(null, "¡Valores invalidos!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+           cc++;
+           cc2++;
+        } else {
+            rafaga = Integer.parseInt(RafagaFD.getText());
+        }
+         
+        
+        String llegadaa  = RafagaFD.getText();
+        if (llegadaa.matches("[a-zA-Z]+")) {
+           JOptionPane.showMessageDialog(null, "¡Valores invalidos!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+              cc++;
+              cc2++;
+           
+        } else {
+              llegada = Integer.parseInt(Llegada.getText());
+        }
+        
 
         ProcesoN p = new ProcesoN(proceso, llegada, rafaga);
         //verificar que no se haya ya puesto un proceso en esa llegada
@@ -223,18 +262,16 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
 
         for (ProcesoN pp : procesos) {
             if (p.getArrivalTime() == pp.getArrivalTime()) {
-                counter = 1;
+                cc ++;
+                JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
             }
-            System.out.println(pp.getProcessName());
         }
 
-        if (counter == 0) {
+        if (cc == 0 && cc2==0) {
             procesos.add(p);
             model.addRow(new Object[]{proceso, llegada, rafaga});
 
             this.contador++;
-        } else {
-            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_AgregarActionPerformed
 
@@ -276,7 +313,7 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
             painter = new PaintSJFNE(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
                     espaciadoHorizontal, espaciadoVertical, procesos);
             frame.add(painter);
-
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setVisible(true);
 
             for (int i = procesos.size() - 1; i >= 0; i--) {
@@ -288,6 +325,12 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
         });
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void salirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBtnActionPerformed
+        controller.hide();
+         MainMenuView ventanaPrincipal = new MainMenuView();
+         ventanaPrincipal.setVisible(true);
+    }//GEN-LAST:event_salirBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,11 +435,12 @@ public class SJFNEVIEW extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private java.awt.Label label1;
+    private javax.swing.JButton salirBtn;
     // End of variables declaration//GEN-END:variables
 
     @Override
