@@ -49,7 +49,7 @@ public class PaintSJF extends JPanel  {
         this.procesos = new ArrayList<>(pp);
         this.original = original;
 
-        timer = new Timer(300, new ActionListener() {
+        timer = new Timer(150, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 repaint(); // Volver a dibujar el componente en cada evento del temporizador

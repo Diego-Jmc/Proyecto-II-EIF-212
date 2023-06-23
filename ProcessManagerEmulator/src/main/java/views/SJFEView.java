@@ -5,6 +5,8 @@
 package views;
 
 import controllers.SJFEController;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,6 +58,15 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
 
     public SJFEView() {
         initComponents();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Aquí puedes realizar cualquier acción necesaria antes de que se cierre la ventana secundaria
+                // Por ejemplo, puedes activar la ventana principal
+                MainMenuView ventanaPrincipal = new MainMenuView();
+                ventanaPrincipal.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -78,6 +89,8 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
         RafagaFD = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         Llegada = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        salirBTN = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -141,6 +154,19 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel5.setText("¿DESEA SALIR AL MENU PRINCIPAL?");
+
+        salirBTN.setBackground(new java.awt.Color(255, 0, 0));
+        salirBTN.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        salirBTN.setForeground(new java.awt.Color(255, 255, 255));
+        salirBTN.setText("Salir");
+        salirBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirBTNActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,7 +177,8 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                         .addGap(122, 122, 122)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +198,10 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(250, 250, 250)
-                        .addComponent(jLabel1)))
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(264, 264, 264)
+                        .addComponent(salirBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(162, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -183,7 +213,7 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -198,7 +228,11 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(salirBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         pack();
@@ -206,40 +240,61 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+       
+        
         DefaultTableModel model = (DefaultTableModel) tablaProcesos.getModel();
         String proceso = "P" + contador;
-        int rafaga = Integer.parseInt(RafagaFD.getText());
-        int llegada = Integer.parseInt(Llegada.getText());
+        int cc = 0;
+        int cc2 = 0;
+        int llegada =0;
+        int rafaga = 0;
 
+        String rafagaa = RafagaFD.getText();
+        if (rafagaa.matches("[a-zA-Z]+")) {
+           JOptionPane.showMessageDialog(null, "¡Valores invalidos!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+           cc++;
+           cc2++;
+        } else {
+            rafaga = Integer.parseInt(RafagaFD.getText());
+        }
+        
+        
+        String llegadaa  = RafagaFD.getText();
+        if (llegadaa.matches("[a-zA-Z]+")) {
+           JOptionPane.showMessageDialog(null, "¡Valores invalidos!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
+              cc++;
+              cc2++;
+           
+        } else {
+              llegada = Integer.parseInt(Llegada.getText());
+        }
+        
+ 
         ProcesoN p = new ProcesoN(proceso, llegada, rafaga);
         //verificar que no se haya ya puesto un proceso en esa llegada
-        int counter = 0;
+     
 
         for (ProcesoN pp : procesos) {
             if (p.getArrivalTime() == pp.getArrivalTime()) {
-                counter = 1;
+                cc++;
+                JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
             }
             System.out.println(pp.getProcessName());
         }
 
-        if (counter == 0) {
+        if (cc == 0 && cc2==0) {
             procesos.add(p);
             model.addRow(new Object[]{proceso, llegada, rafaga});
 
             this.contador++;
-        } else {
-            JOptionPane.showMessageDialog(null, "¡El tiempo de llegada ya ha sido ocupado por otro proceso!!!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-        
         List<ProcesoN> originales = new ArrayList<>(procesos);
-        
+
         List<ProcesoN> particiones = aplicarSJFExpulsivo(procesos);
-        
-        
 
         int cant = particiones.size();
         int total = 0;
@@ -274,10 +329,10 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
             painter = new PaintSJF(matrizEjemplo, tamañoRectanguloAncho, tamañoRectanguloAlto,
                     espaciadoHorizontal, espaciadoVertical, particiones, originales2);
             frame.add(painter);
-
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setVisible(true);
 
-            for (int i = procesos.size() - 1; i >= 0; i--) {
+            for (int i = originales2.size() - 1; i >= 0; i--) {
                 model.removeRow(i);
             }
             // Operación procesos.clear() dentro de invokeLater
@@ -295,6 +350,13 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
     private void LlegadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LlegadaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_LlegadaActionPerformed
+
+    private void salirBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirBTNActionPerformed
+
+        controller.hide();
+        MainMenuView ventanaPrincipal = new MainMenuView();
+        ventanaPrincipal.setVisible(true);
+    }//GEN-LAST:event_salirBTNActionPerformed
     public static List<ProcesoN> aplicarSJFExpulsivo(List<ProcesoN> procesos) {
         List<ProcesoN> particiones = new ArrayList<>();
         int tiempoActual = 0;
@@ -326,60 +388,57 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                             int arri = aux.getArrivalTime();
                             int ff = tiempoActual - arri;
                             if (proceso.getDurationTime() < ff) {
-                                
+
                                 ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime());
-                               // particionesAux.add(nn);
-                                int ppauxDurationaux = proceso.getDurationTime() - (ff-proceso.getDurationTime());
+                                // particionesAux.add(nn);
+                                int ppauxDurationaux = proceso.getDurationTime() - (ff - proceso.getDurationTime());
                                 ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), ppauxDurationaux);
-                                
-                                if(ppauxDurationaux < 0 ){
+
+                                if (ppauxDurationaux < 0) {
                                     ppaux.add(auxiliar);
                                 }
-                                
+
                                 int xxcontador = 0;
-                                for(int x=0; x<ppaux.size(); x++){
-                                    if(ppaux.get(x).getDurationTime() < proceso.getDurationTime()){
-                                        xxcontador ++;
+                                for (int x = 0; x < ppaux.size(); x++) {
+                                    if (ppaux.get(x).getDurationTime() < proceso.getDurationTime()) {
+                                        xxcontador++;
                                     }
                                 }
-                                
-                                if(xxcontador != 0){
+
+                                if (xxcontador != 0) {
                                     nn.setDurationTime(proceso.getDurationTime());
                                     ppaux.add(nn);
+                                } else {
+                                    particionesAux.add(nn);
+                                    //ProcesoN auxiliarr = new ProcesoN(proceso.getProcessName()+ "'", proceso.getArrivalTime(), ppauxDurationaux);
+                                    ppaux.add(auxiliar);
                                 }
-                                else{
-                                      particionesAux.add(nn);
-                                       //ProcesoN auxiliarr = new ProcesoN(proceso.getProcessName()+ "'", proceso.getArrivalTime(), ppauxDurationaux);
-                                ppaux.add(auxiliar);
-                                }
-                                
-                                
+
                             } else {
                                 int sss = tiempoActual - arri;
-                                
+
                                 int xxcontador = 0;
-                                for(int x=0; x<ppaux.size(); x++){
-                                    if(ppaux.get(x).getDurationTime() < proceso.getDurationTime()){
-                                        xxcontador ++;
+                                for (int x = 0; x < ppaux.size(); x++) {
+                                    if (ppaux.get(x).getDurationTime() < proceso.getDurationTime()) {
+                                        xxcontador++;
                                     }
                                 }
                                 ProcesoN nn = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), sss);
                                 //particionesAux.add(nn);
-                                if(xxcontador != 0){
+                                if (xxcontador != 0) {
                                     nn.setDurationTime(proceso.getDurationTime());
                                     ppaux.add(nn);
+                                } else {
+                                    particionesAux.add(nn);
+                                    ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime() - sss);
+
+                                    int prueba = proceso.getDurationTime() - (proceso.getDurationTime() - sss);
+                                    if (prueba != 0) {
+                                        ppaux.add(auxiliar);
+                                    }
+
                                 }
-                                else{
-                                      particionesAux.add(nn);
-                                      ProcesoN auxiliar = new ProcesoN(proceso.getProcessName(), proceso.getArrivalTime(), proceso.getDurationTime() - sss);
-                                      
-                                      int prueba = proceso.getDurationTime() - (proceso.getDurationTime()-sss);
-                                      if(prueba != 0){
-                                           ppaux.add(auxiliar);
-                                      }
-                                     
-                                }
-                                
+
                             }
                         }
                         procesos.remove(i);
@@ -387,36 +446,36 @@ public class SJFEView extends javax.swing.JFrame implements Observer {
                 }
                 tiempoActual++;
             }
-           
+
             Collections.sort(ppaux, Comparator.comparingInt(ProcesoN::getDurationTime));
-            
-            
+
             while (!ppaux.isEmpty()) {
 
                 for (int i = 0; i < ppaux.size(); i++) {
                     ProcesoN proceso = ppaux.get(i);
                     proceso.setArrivalTime(tiempoActual);
                     tiempoActual += proceso.getDurationTime();
-                    
-                    if(proceso.getDurationTime() > 0){
-                         particionesAux.add(proceso);
-                   
+
+                    if (proceso.getDurationTime() > 0) {
+                        particionesAux.add(proceso);
+
                     }
-                     ppaux.remove(i);
-                      i--;
+                    ppaux.remove(i);
+                    i--;
                 }
 
             }
-            
+
         }
-        
+
         Collections.sort(particionesAux, Comparator.comparingInt(ProcesoN::getArrivalTime)
-        .thenComparingInt(ProcesoN::getDurationTime));
+                .thenComparingInt(ProcesoN::getDurationTime));
 
         //despues pinta sin asco.
         return particionesAux;
     }
 
+<<<<<<< HEAD
     
     
 public static List<ProcesoN> getMedia(List<ProcesoN> original, List<ProcesoN> particiones) {
@@ -436,15 +495,69 @@ public static List<ProcesoN> getMedia(List<ProcesoN> original, List<ProcesoN> pa
                     
                     ppaux.setCompletation((procesoAux.getArrivalTime()-1) + procesoAux.getDurationTime());
                }
+=======
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
-            
-            
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(SJFEView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        aux.add(ppaux);
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+
+            public void run() {
+                new SJFEView().setVisible(true);
+            }
+        });
     }
-    
-    return aux;
-}
+
+    public static List<ProcesoN> getMedia(List<ProcesoN> original, List<ProcesoN> particiones) {
+        List<ProcesoN> auxOriginal = new ArrayList<>(original); // Copia independiente de la lista original
+        List<ProcesoN> auxParticiones = new ArrayList<>(particiones); // Copia independiente de la lista particiones
+
+        List<ProcesoN> aux = new ArrayList<>();
+
+        for (ProcesoN proceso : auxOriginal) {
+            ProcesoN ppaux = proceso;
+            ppaux.setCompletation(ppaux.getArrivalTime() + ppaux.getDurationTime());
+            for (ProcesoN procesoAux : auxParticiones) {
+
+                if (proceso.getProcessName().equals(procesoAux.getProcessName())) {
+
+                    if (proceso.getArrivalTime() < procesoAux.getArrivalTime()) {
+
+                        ppaux.setCompletation((procesoAux.getArrivalTime() - 1) + procesoAux.getDurationTime());
+                    }
+                }
+
+>>>>>>> ae8e62d3d10f96d7bdafda442ec289a88f62974d
+            }
+            aux.add(ppaux);
+        }
+
+        return aux;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -456,8 +569,10 @@ public static List<ProcesoN> getMedia(List<ProcesoN> original, List<ProcesoN> pa
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label label1;
+    private javax.swing.JButton salirBTN;
     private javax.swing.JTable tablaProcesos;
     // End of variables declaration//GEN-END:variables
 

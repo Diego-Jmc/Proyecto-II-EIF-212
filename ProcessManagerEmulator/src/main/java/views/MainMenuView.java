@@ -15,6 +15,10 @@ import models.RoundRobinModel;
 import models.SJFEModel;
 import models.SJFNEModel;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+
 
 public class MainMenuView extends javax.swing.JFrame  implements Observer {
 
@@ -239,12 +243,12 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-         controllerRR.mostrar();          
+        controllerRR.mostrar();          
         controller.hide();
 
     }//GEN-LAST:event_jButton4ActionPerformed
 
-  
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
