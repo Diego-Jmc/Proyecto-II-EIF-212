@@ -1,0 +1,249 @@
+
+package painters;
+
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import logic.ProcesoFIFO;
+import logic.ProcesoN;
+import logic.ProgramProcess;
+
+
+public class PaintRoundRobin extends javax.swing.JPanel {
+
+     
+    private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
+    private int tamañoRectanguloAncho; // Ancho del rectángulo en píxeles
+    private int tamañoRectanguloAlto; // Alto del rectángulo en píxeles
+    private int espaciadoHorizontal; // Espaciado horizontal entre rectángulos en píxeles
+    private int espaciadoVertical; // Espaciado vertical entre rectángulos en píxeles
+    private int currentIndex; // Índice del rectángulo actual
+    private Timer timer; // Temporizador para la animación
+    private List<ProgramProcess> procesos;
+    private List<ProgramProcess> original;
+
+    public PaintRoundRobin(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
+            int espaciadoHorizontal, int espaciadoVertical, List<ProgramProcess> pp,List<ProgramProcess> original) {
+
+        this.matriz = matriz;
+        this.tamañoRectanguloAncho = tamañoRectanguloAncho;
+        this.tamañoRectanguloAlto = tamañoRectanguloAlto;
+        this.espaciadoHorizontal = espaciadoHorizontal;
+        this.espaciadoVertical = espaciadoVertical;
+        this.currentIndex = 0;
+        this.procesos = new ArrayList<>(pp);
+        this.original = original;
+
+        timer = new Timer(20, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint(); // Volver a dibujar el componente en cada evento del temporizador
+                setCurrentIndex(getCurrentIndex() + 1); // Incrementar el índice para pasar al siguiente rectángulo
+
+                if (getCurrentIndex() >= matriz.length * matriz[0].length) {
+                    // Si se alcanza el final de la matriz, detener el temporizador
+                    getTimer().stop();
+                }
+            }
+        });
+
+        timer.start(); // Iniciar el temporizador
+
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int startX = espaciadoHorizontal;
+        int startY = 101;
+
+        Font font = new Font("Arial", Font.BOLD, 18);
+
+        g.setFont(font);
+
+        int rows = matriz.length;
+        int cols = matriz[0].length;
+
+// Calcular el índice de fila y columna actual
+        int currentRow = currentIndex / cols;
+        int currentCol = currentIndex % cols;
+
+        g.drawString(
+                "Diagrama de GANTT ALGORITMO SJF EXPULSIVO", 350, 55);
+        Graphics2D g2d = (Graphics2D) g;
+        float grosorLinea = 5.0f; // Puedes ajustar el valor según el grosor deseado
+
+        int tamañoTotalAncho = cols * tamañoRectanguloAncho + (cols - 1) * espaciadoHorizontal;
+        int x1 = 0;
+        int y1 = 100;
+        int x2 = startX + cols * tamañoRectanguloAncho + (cols - 1) * espaciadoHorizontal;
+        int y2 = 100;
+
+        int valorr = 0;
+        int prevX = 0; // Posición x del rectángulo anterior
+        int contador = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matriz[i][j] == 1) { // Si el valor es 1, dibujar el rectángulo rojo
+                    int x;
+                    int y = startY;//+ i * tamañoRectanguloAlto;
+
+                    if (j == 0) {
+                        // Es la primera iteración, establecer x en 0
+                        x = 0;
+                    } else {
+                        x = prevX;
+                    }
+
+                    if (i < currentRow || (i == currentRow && j <= currentCol)) {
+                        g.setColor(Color.BLACK);
+                        g.setColor(Color.RED);
+
+                        if (i < procesos.size()) {
+                            ProgramProcess proceso = procesos.get(i);
+                            proceso.setDurationTime(valorr);
+                            if (contador == 0) {
+                                String cc = String.valueOf(proceso.getArrivalTime());
+                                g2d.drawString(cc, 18, 98);
+                                valorr += proceso.getArrivalTime() + proceso.getDurationTime();
+                                procesos.get(i).setCt(valorr);
+                                contador++;
+                            } else {
+                                valorr += proceso.getDurationTime();
+                                contador++;
+                                procesos.get(i).setCt(valorr);
+                            }
+
+                            String c = String.valueOf(valorr);
+                            g2d.setColor(Color.BLACK);
+                            g.setColor(Color.RED);
+                            g.fillRect(x, y, tamañoRectanguloAncho * proceso.getDurationTime() / 3, tamañoRectanguloAlto);
+                            g.setColor(Color.BLACK);
+                            g.drawRect(x, y, tamañoRectanguloAncho * proceso.getDurationTime() / 3, tamañoRectanguloAlto);
+                            g.setColor(Color.WHITE);
+                            g.drawString(proceso.getName(), x + tamañoRectanguloAncho * proceso.getDurationTime() / 6 - 10, y + tamañoRectanguloAlto / 2 + 5);
+                            g.setColor(Color.BLACK);
+                            prevX = x + tamañoRectanguloAncho * proceso.getDurationTime() / 3;
+                            g2d.drawString(c, prevX - 10, 98);
+
+                            if (contador == procesos.size()) {
+                                int ii = 0;
+                                int counter2 = 0;
+                                int counter3 = 1;
+                                for (ProgramProcess pp : original) {
+                                    String pname = pp.getName();
+                                    int pTiempoEspero = ((pp.getArrivalTime()-1) + pp.getDurationTime());
+                                    int TAT = pp.getCompletation()- pp.getArrivalTime();  //getArrivalLo tira bien
+                                    int WAT = TAT - pp.getDurationTime();
+                                    counter2 += WAT;
+                                    g.drawString(pname + " TIEMPO DE ESPERA: " + WAT, 400, startY + 200 + ii);
+                                    ii += 30;
+                                    counter3++;
+                                }
+
+                                double media = counter2 / (double) original.size();
+
+           
+                            
+                              
+                            }
+                        }
+                    }
+                }
+            }
+
+// Iterar sobre la matriz y dibujar los rectángulos 
+        }
+    }
+
+    public int[][] getMatriz() {
+        return matriz;
+    }
+
+    public void setMatriz(int[][] matriz) {
+        this.matriz = matriz;
+    }
+
+    public int getTamañoRectanguloAncho() {
+        return tamañoRectanguloAncho;
+    }
+
+    public void setTamañoRectanguloAncho(int tamañoRectanguloAncho) {
+        this.tamañoRectanguloAncho = tamañoRectanguloAncho;
+    }
+
+    public int getTamañoRectanguloAlto() {
+        return tamañoRectanguloAlto;
+    }
+
+    public void setTamañoRectanguloAlto(int tamañoRectanguloAlto) {
+        this.tamañoRectanguloAlto = tamañoRectanguloAlto;
+    }
+
+    public int getEspaciadoHorizontal() {
+        return espaciadoHorizontal;
+    }
+
+    public void setEspaciadoHorizontal(int espaciadoHorizontal) {
+        this.espaciadoHorizontal = espaciadoHorizontal;
+    }
+
+    public int getEspaciadoVertical() {
+        return espaciadoVertical;
+    }
+
+    public void setEspaciadoVertical(int espaciadoVertical) {
+        this.espaciadoVertical = espaciadoVertical;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+    
+    
+  
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+}
