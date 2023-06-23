@@ -9,8 +9,7 @@ package logic;
  * @author Jordan Villalobos
  */
 public class ProcesoFIFO {
-    
-    
+
      private String processName;
      private int arrivalTime;
      private int durationTime;

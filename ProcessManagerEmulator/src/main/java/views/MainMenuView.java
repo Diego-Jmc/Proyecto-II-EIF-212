@@ -6,6 +6,7 @@ import controllers.MainMenuController;
 import controllers.RoudRobinController;
 import controllers.SJFEController;
 import controllers.SJFNEController;
+import java.awt.Toolkit;
 import java.util.Observable;
 import java.util.Observer;
 import models.FCFSModel;
@@ -32,13 +33,16 @@ public class MainMenuView extends javax.swing.JFrame  implements Observer {
     private final SJFEView SJFEView = new SJFEView();
     private final SJFEController controllerSJFE = new SJFEController(SJFEView, modelSJ);
     
-    private final RoundRobinModel modelRR = new RoundRobinModel();
-    private final RoundRobin RRView = new RoundRobin();
-    private final RoudRobinController controllerRR = new RoudRobinController(RRView, modelRR);
     
     private final SJFNEModel modelSJNFE = new SJFNEModel();
     private final SJFNEVIEW SJNFEView = new SJFNEVIEW();
     private final SJFNEController controllerSJNFE = new SJFNEController(SJNFEView, modelSJNFE);
+    
+    
+    private final RoundRobinModel modelRR = new RoundRobinModel();
+    private final RoundRobin RRView = new RoundRobin();
+    private final RoudRobinController controllerRR = new RoudRobinController(RRView, modelRR);
+    
     
     //RELATED WITH THE ROUNDROBINsd
 

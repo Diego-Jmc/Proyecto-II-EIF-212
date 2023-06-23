@@ -27,7 +27,7 @@ import logic.ProcesoN;
  */
 public class PaintSJF extends JPanel  {
     
-   private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
+    private int[][] matriz; // La matriz con los valores de los rectángulos  ok la matriz con los valores de ejemplo
     private int tamañoRectanguloAncho; // Ancho del rectángulo en píxeles
     private int tamañoRectanguloAlto; // Alto del rectángulo en píxeles
     private int espaciadoHorizontal; // Espaciado horizontal entre rectángulos en píxeles

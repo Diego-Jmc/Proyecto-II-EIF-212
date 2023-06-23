@@ -35,7 +35,7 @@ public class PaintRR extends JPanel{
 
     public PaintRR(int[][] matriz, int tamañoRectanguloAncho, int tamañoRectanguloAlto,
             int espaciadoHorizontal, int espaciadoVertical, List<ProcesoN> pp) {
-
+               
         this.matriz = matriz;
         this.tamañoRectanguloAncho = tamañoRectanguloAncho;
         this.tamañoRectanguloAlto = tamañoRectanguloAlto;
@@ -80,7 +80,7 @@ public class PaintRR extends JPanel{
         int currentCol = currentIndex % cols;
 
         g.drawString(
-                "Diagrama de GANTT ALGORITMO SJF NO EXPULSIVO", 350, 55);
+                "Diagrama RR Usando FIFO (First in First out)", 350, 55);
         Graphics2D g2d = (Graphics2D) g;
         float grosorLinea = 5.0f; // Puedes ajustar el valor según el grosor deseado
 

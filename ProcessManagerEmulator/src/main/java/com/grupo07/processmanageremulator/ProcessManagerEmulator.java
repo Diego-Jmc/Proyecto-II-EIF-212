@@ -13,6 +13,7 @@ public class ProcessManagerEmulator {
        MainMenuModel mainMenuModel = new MainMenuModel();
        MainMenuController mainMenuController = new MainMenuController(mainView,mainMenuModel);
        mainView.setVisible(true);
+       
     }
     
    

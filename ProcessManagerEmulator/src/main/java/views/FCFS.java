@@ -311,6 +311,7 @@ public class FCFS extends javax.swing.JFrame implements Observer {
     }
 
     private void ordenarProcesos() {
+        
         Comparator<ProcesoFIFO> comparador = Comparator.comparingInt(ProcesoFIFO::getArrivalTime);
         Collections.sort(procesos, comparador);
     }

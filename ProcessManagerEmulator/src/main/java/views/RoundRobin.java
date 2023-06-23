@@ -6,11 +6,13 @@ package views;
 
 import controllers.RoudRobinController;
 import java.awt.Label;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -85,7 +87,7 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
         agregarbt = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        quantumTextField = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -114,6 +116,12 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
         jLabel3.setText("LISTA DE PROCESOS");
 
         jLabel4.setText("Quantum");
+
+        quantumTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quantumTextFieldActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Iniciar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -153,7 +161,7 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
                             .addGap(377, 377, 377)
                             .addComponent(jLabel4)
                             .addGap(26, 26, 26)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(quantumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(11, 11, 11)
@@ -200,7 +208,7 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(quantumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jButton2))
                 .addContainerGap(240, Short.MAX_VALUE))
@@ -288,40 +296,10 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
         // TODO add your handling code here:
     }//GEN-LAST:event_llegadaActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RoundRobin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void quantumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantumTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quantumTextFieldActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RoundRobin().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField RafagaFD;
@@ -334,41 +312,34 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
     private java.awt.Label label1;
     private javax.swing.JTextField llegada;
+    private javax.swing.JTextField quantumTextField;
     // End of variables declaration//GEN-END:variables
 
      private void ordenarProcesosRR() {
     List<ProcesoN> procesosFinal = new ArrayList<>();
-    int tiempo = 0;
+    int tiempoTotal = 0;
+    int quamtum = Integer.valueOf(quantumTextField.getText());
+    
+    Queue<ProcesoN> roundRobinQueue = new  ArrayDeque<>(procesos);
+        
+    
+       while (roundRobinQueue.size() != 0) {
+            ProcesoN procesoActual = roundRobinQueue.poll();
+            int rafagaActual = procesoActual.getDurationTime();
 
-    while (!procesos.isEmpty()) {
-        List<ProcesoN> procesosLlegados = new ArrayList<>();
-
-        for (ProcesoN proceso : procesos) {
-            if (proceso.getArrivalTime() <= tiempo) {
-                procesosLlegados.add(proceso);
+            if (rafagaActual < quantum) {
+                rafagaActual -= quantum;
+                tiempoTotal += quantum;
+                procesoActual.setArrivalTime(rafagaActual);
+                roundRobinQueue.offer(procesoActual);
+            } else {
+                tiempoTotal += rafagaActual;
+                procesosFinal.add(procesoActual);
             }
         }
-
-        if (!procesosLlegados.isEmpty()) {
-            ProcesoN pp = procesosLlegados.get(0);
-            int nuevoEjecucion = Math.min(pp.getDurationTime(), quantum);
-            ProcesoN aux = new ProcesoN(pp.getProcessName(), pp.getArrivalTime(), nuevoEjecucion);
-
-            pp.setDurationTime(pp.getDurationTime() - nuevoEjecucion);
-
-            procesosFinal.add(aux);
-            tiempo += nuevoEjecucion;
-
-            if (pp.getDurationTime() <= 0) {
-                procesos.remove(pp);
-            }
-        } else {
-            tiempo++;
-        }
-    }
+    
     procesos = procesosFinal;
 }
     
@@ -466,10 +437,10 @@ public class RoundRobin extends javax.swing.JFrame implements Observer{
     }
 
     public javax.swing.JTextField getjTextField2() {
-        return jTextField2;
+        return quantumTextField;
     }
 
     public void setjTextField2(javax.swing.JTextField jTextField2) {
-        this.jTextField2 = jTextField2;
+        this.quantumTextField = jTextField2;
     }
 }

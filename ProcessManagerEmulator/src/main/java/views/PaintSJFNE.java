@@ -4,7 +4,6 @@
  */
 package views;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -18,7 +17,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import logic.ProcesoFIFO;
 import logic.ProcesoN;
 
 /**
